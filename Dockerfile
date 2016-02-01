@@ -85,15 +85,39 @@ RUN /usr/local/bin/mix local.hex --force && \
     /usr/local/bin/mix local.rebar --force
 
 # Install Phoenix (an Elixir webapp thingy)
+WORKDIR /phoenix
 RUN /usr/local/bin/mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
 
 # Install postgres 9.5
+WORKDIR /tmp
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main 9.5' >> /etc/apt/sources.list.d/postgresql.list
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN apt-get update
 RUN apt-get install -y postgresql-9.5
 
 # sigh
+WORKDIR /tmp
 RUN apt-get install -y nodejs-legacy
+
+# Install Erlang
+WORKDIR /erlang
+RUN apt-get install -y erlang
+RUN apt-get install -y erlang-base
+RUN apt-get -y build-dep yaws
+RUN apt-get install -y erlang-nox erlang-src erlang-manpages erlang-mode erlang-dev libtool
+RUN apt-get install -y curl erlang-eunit erlang-inets erlang-mnesia erlang-ssl cadaver
+
+# Install rebar
+WORKDIR /rebar
+RUN git clone git://github.com/rebar/rebar.git src
+WORKDIR /rebar/src
+RUN ./bootstrap
+RUN cp ./rebar /usr/local/bin
+
+# Install yaws
+#WORKDIR /yaws
+#RUN git clone git://github.com/klacke/yaws.git src
+#WORKDIR /yaws/src
+#RUN rebar get-deps compile
 
 WORKDIR /
