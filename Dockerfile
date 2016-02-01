@@ -106,6 +106,7 @@ RUN apt-get install -y erlang-base
 RUN apt-get -y build-dep yaws
 RUN apt-get install -y erlang-nox erlang-src erlang-manpages erlang-mode erlang-dev libtool
 RUN apt-get install -y curl erlang-eunit erlang-inets erlang-mnesia erlang-ssl cadaver
+RUN apt-get install -y inotify-tools
 
 # Install rebar
 WORKDIR /rebar
